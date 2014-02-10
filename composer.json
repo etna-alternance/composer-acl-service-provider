@@ -1,0 +1,41 @@
+{
+    "name": "etna/acl-service-provider",
+    "description": "ETNA acl Service Provider",
+    "keywords": ["silex"],
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "ETNA",
+            "email": "dev@etna-alternance.net",
+            "homepage": "http://etna-alternance.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "silex/silex": "1.*@dev",
+        "etna/php-rsa": "dev-master",
+        "etna/auth-service-provider": "dev-master"
+    },
+    "require-dev": {
+        "behat/behat": "2.x@stable"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-0": {
+            "ETNA\\Silex\\Provider\\Acl": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "repositories": [
+       {
+           "type": "composer",
+           "url": "http://composer.etna-alternance.net"
+       }
+   ]
+}
