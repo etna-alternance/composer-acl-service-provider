@@ -20,12 +20,12 @@ class AclServiceProvider implements ServiceProviderInterface
     {
         // If auth is not set
         if (!isset($app['auth'])) {
-            throw new \Exception(get_class($this) . "auth is not set", 401);
+            throw new \Exception(get_class($this) . " auth is not set", 401);
         }
 
         // If the app_name isn't provided in auth config file.
         if (!isset($app['auth.app_name'])) {
-           throw new \Exception(get_class($this) . "auth.app_name is not set", 401);
+           throw new \Exception(get_class($this) . " auth.app_name is not set", 401);
         }
 
         $this->app = $app;
@@ -55,16 +55,17 @@ class AclServiceProvider implements ServiceProviderInterface
         }
 
         // If the cookie doesn't exists
-        if (!$req->user) {
+        if (!isset($req->user)) {
             return $this->app->json("Authorization Required", 401);
         }
 
+        $app_name = $this->app['auth.app_name'];
         // We change all groups with prefix
         $req->user->groups = array_values(
             array_unique(
                 array_map(
-                    function ($role) {
-                        return str_replace("{$this->app['auth.app_name']}_", "", trim($role));
+                    function ($role) use ($app_name) {
+                        return str_replace("{$app_name}_", "", $role);
                     },
                     $req->user->groups
                 )

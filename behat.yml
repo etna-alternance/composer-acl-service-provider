@@ -1,0 +1,26 @@
+# behat.yml
+default:
+    formatter:
+        name:                       progress
+        parameters:
+            decorated:              true
+            verbose:                false
+            time:                   true
+            language:               fr
+            output_path:            null
+            multiline_arguments:    true
+    paths:
+        features: features
+        bootstrap: %behat.paths.features%/bootstrap
+    extensions:
+            Behat\AnalysisExtension\Extension: ~
+wip:
+    filters:
+        tags:       "@wip"
+    formatter:
+        name:       progress
+ci:
+    formatter:
+        name:       progress,junit,html
+        parameters:
+            output_path: null,tmp/behatJunit,tmp/behat_report.html
