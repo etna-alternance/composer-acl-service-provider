@@ -5,3 +5,7 @@
 * Après clone du dépot, se mettre à la racine et :
 
     * composer install
+    * Si le dossier Tmp/keys n'existe pas, creer le dossier Tmp et le dossier keys
+    * faire un chmod -R 777 sur tmp
+
+    C'est prêt, servez-vous !
