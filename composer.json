@@ -24,8 +24,8 @@
         "bin-dir": "bin"
     },
     "autoload": {
-        "psr-0": {
-            "ETNA\\Silex\\Provider\\Acl": "src"
+        "psr-4": {
+            "ETNA\\Silex\\Provider\\Acl\\": "src"
         }
     },
     "extra": {
