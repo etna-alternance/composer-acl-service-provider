@@ -64,6 +64,14 @@ class FeatureContext extends BehatContext
     }
 
     /**
+     * @Given /^setter le app\[\'auth\.api_path\'\] a "([^"]*)"$/
+     */
+    public function setterLeAppAuthApiPathA($arg1)
+    {
+        self::$silex_app["auth.api_path"] = $arg1;
+    }
+
+    /**
      * @Given /^que je suis authentifié en tant que "([^"]*)"(?: depuis (\d+) minutes?)?(?: avec les roles "([^"]*)")?(?: avec l'id (\d+))?/
      */
     public function queJeSuisAuthentifieEnTantQue($login, $duration = 1, $roles = "", $id = 1)

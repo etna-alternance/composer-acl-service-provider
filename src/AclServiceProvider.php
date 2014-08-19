@@ -50,7 +50,11 @@ class AclServiceProvider implements ServiceProviderInterface
     public function checkUserAccess(Request $req)
     {
         // We only match api's calls
-        if (!preg_match("#^/api/?#", $req->getRequestUri())) {
+        $regex = "#^/api/?#";
+        if (isset($this->app['auth.api_path'])) {
+            $regex = "#{$this->app['auth.api_path']}#";
+        }
+        if (!preg_match($regex, $req->getRequestUri())) {
             return ;
         }
 
