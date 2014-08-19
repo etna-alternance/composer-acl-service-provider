@@ -47,26 +47,26 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @Given /^que j\'ai loader l\'acl-service-provider$/
+     * @Given /^que j\'ai chargé l\'acl-service-provider$/
      */
-    public function queJAiLoaderLAclServiceProvider()
+    public function queJAiChargeLAclServiceProvider()
     {
         self::$silex_app->register(new \ETNA\Silex\Provider\Acl\AclServiceProvider());
     }
 
     /**
-     * @Given /^setter le app\[\'auth\.app_name\'\] a "([^"]*)"$/
+     * @Given /^setté le app\[\'auth\.app_name\'\] a "([^"]*)"$/
      */
-    public function setterLeAppAuthAppNameA($arg1)
+    public function setteLeAppAuthAppNameA($arg1)
     {
         self::$silex_app["auth"] = [];
         self::$silex_app["auth.app_name"] = $arg1;
     }
 
     /**
-     * @Given /^setter le app\[\'auth\.api_path\'\] a "([^"]*)"$/
+     * @Given /^setté le app\[\'auth\.api_path\'\] a "([^"]*)"$/
      */
-    public function setterLeAppAuthApiPathA($arg1)
+    public function setteLeAppAuthApiPathA($arg1)
     {
         self::$silex_app["auth.api_path"] = $arg1;
     }

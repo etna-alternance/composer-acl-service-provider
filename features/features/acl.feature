@@ -7,8 +7,8 @@ Fonctionnalité: Afin de savoir qui fait quoi,
 
 @GET @prof @student @adm
 Plan du Scénario: GET avec un cookie valide sur /api
-    Etant donné que j'ai loader l'acl-service-provider
-    Et          setter le app['auth.app_name'] a "gsa"
+    Etant donné que j'ai chargé l'acl-service-provider
+    Et          setté le app['auth.app_name'] a "gsa"
     Etant donné que je suis authentifié en tant que "<user>" avec les roles "<role>"
     Quand       je fais un GET sur /api
     Et          le status HTTP devrait être 200
@@ -25,9 +25,9 @@ Plan du Scénario: GET avec un cookie valide sur /api
 
 @GET @prof @student @adm
 Plan du Scénario: GET avec un cookie valide sur /api avec /pouet/* comme api_path
-    Etant donné que j'ai loader l'acl-service-provider
-    Et          setter le app['auth.app_name'] a "gsa"
-    Et          setter le app['auth.api_path'] a "/pouet/*"
+    Etant donné que j'ai chargé l'acl-service-provider
+    Et          setté le app['auth.app_name'] a "gsa"
+    Et          setté le app['auth.api_path'] a "/pouet/*"
     Etant donné que je suis authentifié en tant que "<user>" avec les roles "<role>"
     Quand       je fais un GET sur /api
     Et          le status HTTP devrait être 200
@@ -43,8 +43,8 @@ Plan du Scénario: GET avec un cookie valide sur /api avec /pouet/* comme api_pa
 
 @GET @prof @student @adm
 Plan du Scénario: GET avec un cookie valide sur /api
-    Etant donné que j'ai loader l'acl-service-provider
-    Et          setter le app['auth.app_name'] a "auth"
+    Etant donné que j'ai chargé l'acl-service-provider
+    Et          setté le app['auth.app_name'] a "auth"
     Etant donné que je suis authentifié en tant que "<user>" avec les roles "<role>"
     Quand       je fais un GET sur /api
     Et          le status HTTP devrait être 200
