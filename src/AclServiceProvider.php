@@ -54,13 +54,15 @@ class AclServiceProvider implements ServiceProviderInterface
         if (isset($this->app['auth.api_path'])) {
             $regex = "#{$this->app['auth.api_path']}#";
         }
-        if (!preg_match($regex, $req->getRequestUri())) {
-            return ;
-        }
 
-        // If the cookie doesn't exists
-        if (!isset($req->user)) {
-            return $this->app->json("Authorization Required", 401);
+        switch (true) {
+            // If the request route doesn't match the $app['auth.api_path']
+            case !preg_match($regex, $req->getRequestUri()):
+            // If the request method is OPTIONS
+            case $req->getMethod() === 'OPTIONS':
+            // If the request doesn't have credential
+            case !isset($req->user):
+                return;
         }
 
         $app_name = $this->app['auth.app_name'];
