@@ -27,6 +27,7 @@ class AclServiceProvider implements ServiceProviderInterface
 
     /**
      * @param array $params
+     * @throw \Exception
      */
     private function checkParams($params)
     {
@@ -57,6 +58,7 @@ class AclServiceProvider implements ServiceProviderInterface
      * and verify if the user is not close
      *
      * @param Request $req
+     * @return null|JsonResponse
      */
     public function checkUserAccess(Request $req)
     {
@@ -92,13 +94,14 @@ class AclServiceProvider implements ServiceProviderInterface
             return $this->app->json("Your are closed for this app !", 403);
         }
 
-        $app["user"] = $req->user;
+        $this->app["user"] = $req->user;
     }
 
     /**
      * Give the user Identity
      *
      * @param Request $req
+     * @return JsonResponse
      */
     public function check(Request $req)
     {
