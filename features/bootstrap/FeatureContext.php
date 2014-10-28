@@ -19,6 +19,13 @@ putenv("APPLICATION_ENV=" . (getenv("APPLICATION_ENV") ?: "local.testing"));
  */
 class FeatureContext extends BehatContext
 {
+    private $base_url;
+    private $request;
+    private $response;
+    private $requests_path;
+    private $results_path;
+    private $data;
+
     use ETNA\FeatureContext\RSA;
     use ETNA\FeatureContext\SilexApplication;
     use ETNA\FeatureContext\FixedTime;
@@ -53,6 +60,7 @@ class FeatureContext extends BehatContext
     public function setteLeAppAuthAppNameA($arg1)
     {
         self::$silex_app["auth"] = [];
+
         self::$silex_app["auth.app_name"] = $arg1;
     }
 
@@ -70,7 +78,7 @@ class FeatureContext extends BehatContext
     public function queJeSuisAuthentifieEnTantQue($login, $duration = 1, $roles = "", $id = 1)
     {
         $duration = (int) $duration;
-        $id = (int) $id;
+        $id       = (int) $id;
 
         $identity = base64_encode(json_encode([
             "id"         => $id,
@@ -95,8 +103,8 @@ class FeatureContext extends BehatContext
     {
         if ($body !== null) {
             $body = @file_get_contents($this->requests_path . $body);
-            if (!$body) {
-               throw new Exception("File not found : {$this->requests_path}${body}");
+            if ($body === false) {
+                throw new Exception("File not found : {$this->requests_path}${body}");
             }
         }
         $this->jeFaisUneRequetteHTTPAvecDuJSON($method, $url, $body);
@@ -107,12 +115,12 @@ class FeatureContext extends BehatContext
      */
     public function jeFaisUneRequetteHTTPAvecDuJSON($method, $url, $body)
     {
-        if (preg_match('/^".*"$/', $url)) {
+        if (preg_match('/^".*"$/', $url) === true) {
             $url = substr($url, 1, -1);
         }
 
         if ($body !== null) {
-            if (is_object($body)) {
+            if (is_object($body) === true) {
                 $body = $body->getRaw();
             }
             $this->request["headers"]["Content-Type"] = 'application/json';
@@ -158,7 +166,7 @@ class FeatureContext extends BehatContext
         if ("application/json" !== $this->response["headers"]["content-type"]) {
             throw new Exception("Invalid response type");
         }
-        if ($this->response['body'] == "") {
+        if ($this->response['body'] === "") {
             throw new Exception("No response");
         }
         $json = json_decode($this->response['body']);
@@ -174,7 +182,7 @@ class FeatureContext extends BehatContext
      */
     public function leHeaderDoitEtre($header, $value)
     {
-        if ($this->response["headers"][strtolower($header)] != $value) {
+        if ($this->response["headers"][strtolower($header)] !== $value) {
             throw new Exception("Invalid header '{$header}'. Value should be '{$value}' but recieved '{$this->response["headers"][$header]}'");
         }
     }
@@ -202,7 +210,7 @@ class FeatureContext extends BehatContext
         }
 
         $this->check($result, $this->data, "result", $errors);
-        if ($n = count($errors)) {
+        if ($n = count($errors) > 0) {
             echo json_encode($this->data, JSON_PRETTY_PRINT);
             throw new Exception("{$n} errors :\n" . implode("\n", $errors));
         }
