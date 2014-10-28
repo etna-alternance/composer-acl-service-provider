@@ -1,4 +1,3 @@
-# behat.yml
 default:
     formatter:
         name:                       progress
@@ -14,6 +13,10 @@ default:
         bootstrap: %behat.paths.features%/bootstrap
     extensions:
             Behat\AnalysisExtension\Extension: ~
+    context:
+        parameters:
+            customDate: "2013-11-13 14:42:42"
+
 wip:
     filters:
         tags:       "@wip"
@@ -23,4 +26,21 @@ ci:
     formatter:
         name:       progress,junit,html
         parameters:
-            output_path: null,tmp/behatJunit,tmp/behat_report.html
+            output_path: null,tmp/behat/behatJunit,tmp/behat/behat_report.html
+
+    context:
+        parameters:
+            # Whether or not to collect code coverage
+            enableCodeCoverage: true
+
+            # Path to store the generated code coverage report
+            coveragePath: /tmp/behat/coverage
+
+            # White list of directories to collect coverage about
+            whitelist:
+                - app
+            # Black list of directories to not collect coverage about
+            blacklist:
+                - tmp
+                - features
+                - bin

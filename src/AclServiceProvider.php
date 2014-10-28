@@ -2,66 +2,78 @@
 
 namespace ETNA\Silex\Provider\Acl;
 
-use ETNA\RSA\RSA;
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ParameterBag;
-use Silex\ServiceProviderInterface;
 use Exception;
+use Silex\Application;
+use Silex\ServiceProviderInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class AclServiceProvider implements ServiceProviderInterface
 {
+    /** @var \Silex\Application */
+    private $app;
 
     /**
      * Check configuration
      */
     public function boot(Application $app)
     {
-        // If auth is not set
-        if (!isset($app['auth'])) {
-            throw new \Exception(get_class($this) . " auth is not set", 401);
-        }
-
-        // If the app_name isn't provided in auth config file.
-        if (!isset($app['auth.app_name'])) {
-           throw new \Exception(get_class($this) . " auth.app_name is not set", 401);
-        }
-
         $this->app = $app;
+
+        $this->checkParams([
+            "auth",
+            "auth.app_name",
+        ]);
+    }
+
+    /**
+     * @param string[] $params
+     * @throw \Exception
+     */
+    private function checkParams($params)
+    {
+        foreach ($params as $param_name) {
+            if (false === isset($this->app[$param_name])) {
+                throw new \Exception(get_class($this) . ": {$param_name} is not set", 401);
+            }
+        }
     }
 
     /**
      * Register before callbacks
+     *
+     * @param \Silex\Application $app
      */
     public function register(Application $app)
     {
         $app->before([$this, "checkUserAccess"]);
 
         // Check user's identity
-        $app->match("/api",  [$this, "check"]);
-        $app->match("/api/", [$this, "check"]);
+        $callback = [$this, "check"];
+        $app->match("/api", $callback);
+        $app->match("/api/", $callback);
     }
 
     /**
      * Parse all users roles to transform $app['auth.app_name']_role to role
      * and verify if the user is not close
+     *
+     * @param Request $req
+     * @return null|\Symfony\Component\HttpFoundation\JsonResponse
      */
     public function checkUserAccess(Request $req)
     {
         // We only match api's calls
         $regex = "#^/api/?#";
-        if (isset($this->app['auth.api_path'])) {
+        if (true === isset($this->app['auth.api_path'])) {
             $regex = "#{$this->app['auth.api_path']}#";
         }
 
         switch (true) {
-            // If the request route doesn't match the $app['auth.api_path']
-            case !preg_match($regex, $req->getRequestUri()):
-            // If the request method is OPTIONS
+            // we do NOTHING if the request route doesn't match the $app['auth.api_path']
+            // or is a CORS or doesn't have credential
+            case 1 !== preg_match($regex, $req->getRequestUri()):
             case $req->getMethod() === 'OPTIONS':
-            // If the request doesn't have credential
-            case !isset($req->user):
+            case false === isset($req->user):
                 return;
         }
 
@@ -78,20 +90,23 @@ class AclServiceProvider implements ServiceProviderInterface
             )
         );
 
-        if (in_array("close", $req->user->groups)) {
+        if (true === in_array("close", $req->user->groups)) {
             return $this->app->json("Your are closed for this app !", 403);
         }
 
-        $app["user"] = $req->user;
+        $this->app["user"] = $req->user;
     }
 
     /**
      * Give the user Identity
+     *
+     * @param Request $req
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function check(Request $req)
     {
         $user = null;
-        if (isset($req->user)) {
+        if (true === isset($req->user)) {
             $user = $req->user;
         }
         return $this->app->json($user, 200);

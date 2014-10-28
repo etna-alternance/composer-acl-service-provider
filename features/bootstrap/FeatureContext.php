@@ -1,17 +1,10 @@
 <?php
 
-use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Exception\PendingException,
-    Behat\Behat\Event\SuiteEvent;
-use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+use Behat\Behat\Context\BehatContext;
 
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 require_once(__DIR__ . "/../../vendor/autoload.php");
 
@@ -26,6 +19,13 @@ putenv("APPLICATION_ENV=" . (getenv("APPLICATION_ENV") ?: "local.testing"));
  */
 class FeatureContext extends BehatContext
 {
+    private $base_url;
+    private $request;
+    private $response;
+    private $requests_path;
+    private $results_path;
+    private $data;
+
     use ETNA\FeatureContext\RSA;
     use ETNA\FeatureContext\SilexApplication;
     use ETNA\FeatureContext\FixedTime;
@@ -60,6 +60,7 @@ class FeatureContext extends BehatContext
     public function setteLeAppAuthAppNameA($arg1)
     {
         self::$silex_app["auth"] = [];
+
         self::$silex_app["auth.app_name"] = $arg1;
     }
 
@@ -77,7 +78,7 @@ class FeatureContext extends BehatContext
     public function queJeSuisAuthentifieEnTantQue($login, $duration = 1, $roles = "", $id = 1)
     {
         $duration = (int) $duration;
-        $id = (int) $id;
+        $id       = (int) $id;
 
         $identity = base64_encode(json_encode([
             "id"         => $id,
@@ -102,8 +103,8 @@ class FeatureContext extends BehatContext
     {
         if ($body !== null) {
             $body = @file_get_contents($this->requests_path . $body);
-            if (!$body) {
-               throw new Exception("File not found : {$this->requests_path}${body}");
+            if ($body === false) {
+                throw new Exception("File not found : {$this->requests_path}${body}");
             }
         }
         $this->jeFaisUneRequetteHTTPAvecDuJSON($method, $url, $body);
@@ -114,12 +115,12 @@ class FeatureContext extends BehatContext
      */
     public function jeFaisUneRequetteHTTPAvecDuJSON($method, $url, $body)
     {
-        if (preg_match('/^".*"$/', $url)) {
+        if (preg_match('/^".*"$/', $url) === true) {
             $url = substr($url, 1, -1);
         }
 
         if ($body !== null) {
-            if (is_object($body)) {
+            if (is_object($body) === true) {
                 $body = $body->getRaw();
             }
             $this->request["headers"]["Content-Type"] = 'application/json';
@@ -165,7 +166,7 @@ class FeatureContext extends BehatContext
         if ("application/json" !== $this->response["headers"]["content-type"]) {
             throw new Exception("Invalid response type");
         }
-        if ($this->response['body'] == "") {
+        if ($this->response['body'] === "") {
             throw new Exception("No response");
         }
         $json = json_decode($this->response['body']);
@@ -181,7 +182,7 @@ class FeatureContext extends BehatContext
      */
     public function leHeaderDoitEtre($header, $value)
     {
-        if ($this->response["headers"][strtolower($header)] != $value) {
+        if ($this->response["headers"][strtolower($header)] !== $value) {
             throw new Exception("Invalid header '{$header}'. Value should be '{$value}' but recieved '{$this->response["headers"][$header]}'");
         }
     }
@@ -199,6 +200,7 @@ class FeatureContext extends BehatContext
      * @Then /^le résultat devrait être identique à "(.*)"$/
      * @Then /^le résultat devrait être identique au JSON suivant :$/
      * @Then /^le résultat devrait ressembler au JSON suivant :$/
+     * @param string $string
      */
     public function leResultatDevraitRessemblerAuJsonSuivant($string)
     {
@@ -208,24 +210,27 @@ class FeatureContext extends BehatContext
         }
 
         $this->check($result, $this->data, "result", $errors);
-        if ($n = count($errors)) {
+        if ($n = count($errors) > 0) {
             echo json_encode($this->data, JSON_PRETTY_PRINT);
             throw new Exception("{$n} errors :\n" . implode("\n", $errors));
         }
     }
 
+    /**
+     * @param string $prefix
+     */
     protected function check($expected_value, $found_value, $prefix, &$errors)
     {
-        if (is_string($expected_value) && $expected_value == "#Array#") {
-            if (!is_array($found_value)) {
+        if (true === is_string($expected_value) && $expected_value === "#Array#") {
+            if (false === is_array($found_value)) {
                 $errors[] = sprintf("%-35s: not an array", $prefix);
             }
 
             return;
         }
 
-        if (is_string($expected_value) && substr($expected_value, 0, 1) == "#" && substr($expected_value, -1, 1) == "#") {
-            if (!preg_match($expected_value, $found_value)) {
+        if (true === is_string($expected_value) && substr($expected_value, 0, 1) === "#" && substr($expected_value, -1, 1) === "#") {
+            if (1 !== preg_match($expected_value, $found_value)) {
                 $errors[] = sprintf("%-35s: regex error : '%s' does not match '%s'", $prefix, $found_value, $expected_value);
             }
 
@@ -234,15 +239,15 @@ class FeatureContext extends BehatContext
 
         $t1 = gettype($expected_value);
         $t2 = gettype($found_value);
-        if ($t1 != $t2) {
+        if ($t1 !== $t2) {
             $errors[] = sprintf("%-35s: type error : expected '%s'; got '%s'", $prefix, $t1, $t2);
             return;
         }
 
-        if (is_array($expected_value)) {
+        if (true === is_array($expected_value)) {
             $l1 = count($expected_value);
             $l2 = count($found_value);
-            if ($l1 != $l2) {
+            if ($l1 !== $l2) {
                 $errors[] = sprintf("%-35s: array length error : expected '%d'; got '%d'", $prefix, $l1, $l2);
                 return;
             }
@@ -253,7 +258,7 @@ class FeatureContext extends BehatContext
             return;
         }
 
-        if (is_object($expected_value)) {
+        if (true === is_object($expected_value)) {
             $expected_keys = array_keys((array) $expected_value);
             $found_keys    = array_keys((array) $found_value);
 
