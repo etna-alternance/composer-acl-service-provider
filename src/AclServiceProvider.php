@@ -2,13 +2,10 @@
 
 namespace ETNA\Silex\Provider\Acl;
 
-use ETNA\RSA\RSA;
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ParameterBag;
-use Silex\ServiceProviderInterface;
 use Exception;
+use Silex\Application;
+use Silex\ServiceProviderInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class AclServiceProvider implements ServiceProviderInterface
 {

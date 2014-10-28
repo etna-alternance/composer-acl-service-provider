@@ -1,17 +1,10 @@
 <?php
 
-use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Exception\PendingException,
-    Behat\Behat\Event\SuiteEvent;
-use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+use Behat\Behat\Context\BehatContext;
 
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 require_once(__DIR__ . "/../../vendor/autoload.php");
 
@@ -199,6 +192,7 @@ class FeatureContext extends BehatContext
      * @Then /^le résultat devrait être identique à "(.*)"$/
      * @Then /^le résultat devrait être identique au JSON suivant :$/
      * @Then /^le résultat devrait ressembler au JSON suivant :$/
+     * @param string $string
      */
     public function leResultatDevraitRessemblerAuJsonSuivant($string)
     {
@@ -214,6 +208,9 @@ class FeatureContext extends BehatContext
         }
     }
 
+    /**
+     * @param string $prefix
+     */
     protected function check($expected_value, $found_value, $prefix, &$errors)
     {
         if (is_string($expected_value) && $expected_value == "#Array#") {
