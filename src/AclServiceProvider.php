@@ -9,20 +9,19 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AclServiceProvider implements ServiceProviderInterface
 {
-
     /**
      * Check configuration
      */
     public function boot(Application $app)
     {
         // If auth is not set
-        if (!isset($app['auth'])) {
+        if (false === isset($app['auth'])) {
             throw new \Exception(get_class($this) . " auth is not set", 401);
         }
 
         // If the app_name isn't provided in auth config file.
-        if (!isset($app['auth.app_name'])) {
-           throw new \Exception(get_class($this) . " auth.app_name is not set", 401);
+        if (false === isset($app['auth.app_name'])) {
+            throw new \Exception(get_class($this) . " auth.app_name is not set", 401);
         }
 
         $this->app = $app;
@@ -48,17 +47,16 @@ class AclServiceProvider implements ServiceProviderInterface
     {
         // We only match api's calls
         $regex = "#^/api/?#";
-        if (isset($this->app['auth.api_path'])) {
+        if (true === isset($this->app['auth.api_path'])) {
             $regex = "#{$this->app['auth.api_path']}#";
         }
 
         switch (true) {
-            // If the request route doesn't match the $app['auth.api_path']
-            case !preg_match($regex, $req->getRequestUri()):
-            // If the request method is OPTIONS
+            // we do NOTHING if the request route doesn't match the $app['auth.api_path']
+            // or is a CORS or doesn't have credential
+            case 1 !== preg_match($regex, $req->getRequestUri()):
             case $req->getMethod() === 'OPTIONS':
-            // If the request doesn't have credential
-            case !isset($req->user):
+            case false === isset($req->user):
                 return;
         }
 
@@ -75,7 +73,7 @@ class AclServiceProvider implements ServiceProviderInterface
             )
         );
 
-        if (in_array("close", $req->user->groups)) {
+        if (true === in_array("close", $req->user->groups)) {
             return $this->app->json("Your are closed for this app !", 403);
         }
 
@@ -88,7 +86,7 @@ class AclServiceProvider implements ServiceProviderInterface
     public function check(Request $req)
     {
         $user = null;
-        if (isset($req->user)) {
+        if (true === isset($req->user)) {
             $user = $req->user;
         }
         return $this->app->json($user, 200);
