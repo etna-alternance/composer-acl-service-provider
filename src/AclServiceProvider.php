@@ -26,7 +26,7 @@ class AclServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param array $params
+     * @param string[] $params
      * @throw \Exception
      */
     private function checkParams($params)
@@ -58,7 +58,7 @@ class AclServiceProvider implements ServiceProviderInterface
      * and verify if the user is not close
      *
      * @param Request $req
-     * @return null|JsonResponse
+     * @return null|\Symfony\Component\HttpFoundation\JsonResponse
      */
     public function checkUserAccess(Request $req)
     {
@@ -101,7 +101,7 @@ class AclServiceProvider implements ServiceProviderInterface
      * Give the user Identity
      *
      * @param Request $req
-     * @return JsonResponse
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function check(Request $req)
     {
