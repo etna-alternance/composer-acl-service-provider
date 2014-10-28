@@ -9,39 +9,54 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AclServiceProvider implements ServiceProviderInterface
 {
+    /** @var \Silex\Application */
+    private $app;
+
     /**
      * Check configuration
      */
     public function boot(Application $app)
     {
-        // If auth is not set
-        if (false === isset($app['auth'])) {
-            throw new \Exception(get_class($this) . " auth is not set", 401);
-        }
-
-        // If the app_name isn't provided in auth config file.
-        if (false === isset($app['auth.app_name'])) {
-            throw new \Exception(get_class($this) . " auth.app_name is not set", 401);
-        }
-
         $this->app = $app;
+
+        $this->checkParams([
+            "auth",
+            "auth.app_name",
+        ]);
+    }
+
+    /**
+     * @param array $params
+     */
+    private function checkParams($params)
+    {
+        foreach ($params as $param_name) {
+            if (false === isset($this->app[$param_name])) {
+                throw new \Exception(get_class($this) . ": {$param_name} is not set", 401);
+            }
+        }
     }
 
     /**
      * Register before callbacks
+     *
+     * @param \Silex\Application $app
      */
     public function register(Application $app)
     {
         $app->before([$this, "checkUserAccess"]);
 
         // Check user's identity
-        $app->match("/api",  [$this, "check"]);
-        $app->match("/api/", [$this, "check"]);
+        $callback = [$this, "check"];
+        $app->match("/api", $callback);
+        $app->match("/api/", $callback);
     }
 
     /**
      * Parse all users roles to transform $app['auth.app_name']_role to role
      * and verify if the user is not close
+     *
+     * @param Request $req
      */
     public function checkUserAccess(Request $req)
     {
@@ -82,6 +97,8 @@ class AclServiceProvider implements ServiceProviderInterface
 
     /**
      * Give the user Identity
+     *
+     * @param Request $req
      */
     public function check(Request $req)
     {
