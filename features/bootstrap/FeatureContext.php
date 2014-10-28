@@ -221,16 +221,16 @@ class FeatureContext extends BehatContext
      */
     protected function check($expected_value, $found_value, $prefix, &$errors)
     {
-        if (is_string($expected_value) && $expected_value == "#Array#") {
-            if (!is_array($found_value)) {
+        if (true === is_string($expected_value) && $expected_value === "#Array#") {
+            if (false === is_array($found_value)) {
                 $errors[] = sprintf("%-35s: not an array", $prefix);
             }
 
             return;
         }
 
-        if (is_string($expected_value) && substr($expected_value, 0, 1) == "#" && substr($expected_value, -1, 1) == "#") {
-            if (!preg_match($expected_value, $found_value)) {
+        if (true === is_string($expected_value) && substr($expected_value, 0, 1) === "#" && substr($expected_value, -1, 1) === "#") {
+            if (1 !== preg_match($expected_value, $found_value)) {
                 $errors[] = sprintf("%-35s: regex error : '%s' does not match '%s'", $prefix, $found_value, $expected_value);
             }
 
@@ -239,15 +239,15 @@ class FeatureContext extends BehatContext
 
         $t1 = gettype($expected_value);
         $t2 = gettype($found_value);
-        if ($t1 != $t2) {
+        if ($t1 !== $t2) {
             $errors[] = sprintf("%-35s: type error : expected '%s'; got '%s'", $prefix, $t1, $t2);
             return;
         }
 
-        if (is_array($expected_value)) {
+        if (true === is_array($expected_value)) {
             $l1 = count($expected_value);
             $l2 = count($found_value);
-            if ($l1 != $l2) {
+            if ($l1 !== $l2) {
                 $errors[] = sprintf("%-35s: array length error : expected '%d'; got '%d'", $prefix, $l1, $l2);
                 return;
             }
@@ -258,7 +258,7 @@ class FeatureContext extends BehatContext
             return;
         }
 
-        if (is_object($expected_value)) {
+        if (true === is_object($expected_value)) {
             $expected_keys = array_keys((array) $expected_value);
             $found_keys    = array_keys((array) $found_value);
 
