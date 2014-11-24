@@ -7,7 +7,7 @@ script:
   - openssl genrsa  -out tmp/keys/private.key 2048
   - openssl rsa -in tmp/keys/private.key -pubout -out tmp/keys/public.key
   - composer install --dev --prefer-source
-  - bin/behat -f progress
+  - composer test
 notify:
   slack:
     team : {{slackTeam}}
