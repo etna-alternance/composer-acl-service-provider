@@ -12,8 +12,8 @@
     ],
     "require": {
         "php": ">=5.5",
-        "silex/silex": "1.x",
-        "etna/auth-service-provider": "~0.1.5"
+        "silex/silex": "~2.0@dev",
+        "etna/auth-service-provider": "~2.0"
     },
     "require-dev": {
         "behat/behat": "2.x@stable",
