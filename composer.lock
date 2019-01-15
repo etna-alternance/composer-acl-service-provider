@@ -2471,16 +2471,16 @@
         },
         {
             "name": "etna/composer-behat-utils",
-            "version": "v3.0.0-alpha.6",
+            "version": "v3.0.0-alpha.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/etna-alternance/composer-behat-utils.git",
-                "reference": "fbe28ca17600b1a6178f910243fb905ed8883872"
+                "reference": "264063e12acc93d0ba1e12719f40aaf806fa5db6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/etna-alternance/composer-behat-utils/zipball/fbe28ca17600b1a6178f910243fb905ed8883872",
-                "reference": "fbe28ca17600b1a6178f910243fb905ed8883872",
+                "url": "https://api.github.com/repos/etna-alternance/composer-behat-utils/zipball/264063e12acc93d0ba1e12719f40aaf806fa5db6",
+                "reference": "264063e12acc93d0ba1e12719f40aaf806fa5db6",
                 "shasum": ""
             },
             "require": {
@@ -2520,10 +2520,10 @@
                 "utils"
             ],
             "support": {
-                "source": "https://github.com/etna-alternance/composer-behat-utils/tree/v3.0.0-alpha.6",
+                "source": "https://github.com/etna-alternance/composer-behat-utils/tree/v3.0.0-alpha.7",
                 "issues": "https://github.com/etna-alternance/composer-behat-utils/issues"
             },
-            "time": "2019-01-14T16:10:12+00:00"
+            "time": "2019-01-15T17:21:09+00:00"
         },
         {
             "name": "evenement/evenement",
