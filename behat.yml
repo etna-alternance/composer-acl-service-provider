@@ -1,46 +1,59 @@
 default:
-    formatter:
-        name:                       progress
-        parameters:
-            decorated:              true
-            verbose:                false
-            time:                   true
-            language:               fr
-            output_path:            null
-            multiline_arguments:    true
-    paths:
-        features: features
-        bootstrap: %behat.paths.features%/bootstrap
-    extensions:
-            Behat\AnalysisExtension\Extension: ~
-    context:
-        parameters:
-            customDate: "2013-11-13 14:42:42"
+  formatters:
+    progress:
+        decorated:           true
+        verbose:             true
+        time:                true
+        language:            fr
+        output_path:         null
+        multiline_arguments: true
 
-wip:
-    filters:
-        tags:       "@wip"
-    formatter:
-        name:       progress
+  suites:
+    default:
+      paths:
+        - '%paths.base%/features/suites'
+      contexts:
+        - FeatureContext
+        - ETNA\FeatureContext\ApiContext
+        - ETNA\FeatureContext\FixedDateContext:
+            date: "2013-08-13 14:42:42"
+        - ETNA\FeatureContext\SymfonyTestKernelContext:
+            bundles:
+              - '\ETNA\Auth\AuthBundle'
+              - '\ETNA\Acl\AclBundle'
+        - ETNA\FeatureContext\ExceptionContainerContext
+        - ETNA\FeatureContext\AuthContext
+  extensions:
+    Behat\Symfony2Extension:
+      kernel:
+        class: TestApp\Kernel
+
 ci:
-    formatter:
-        name:       progress,junit,html
-        parameters:
-            output_path: null,tmp/behat/behatJunit,tmp/behat/behat_report.html
-
-    context:
-        parameters:
-            # Whether or not to collect code coverage
-            enableCodeCoverage: true
-
-            # Path to store the generated code coverage report
-            coveragePath: /tmp/behat/coverage
-
-            # White list of directories to collect coverage about
+  suites:
+    default:
+      paths:
+        - '%paths.base%/features/suites'
+      contexts:
+        - ETNA\FeatureContext\CoverageContext:
+            coverage_path: /tmp/behat/coverage
             whitelist:
-                - app
-            # Black list of directories to not collect coverage about
+                - src
             blacklist:
-                - tmp
-                - features
+                - vendor
                 - bin
+                - tmp
+                - Tests
+        - FeatureContext
+        - ETNA\FeatureContext\ApiContext
+        - ETNA\FeatureContext\FixedDateContext:
+            date: "2013-08-13 14:42:42"
+        - ETNA\FeatureContext\SymfonyTestKernelContext:
+            bundles:
+              - '\ETNA\Auth\AuthBundle'
+              - '\ETNA\Acl\AclBundle'
+        - ETNA\FeatureContext\ExceptionContainerContext
+        - ETNA\FeatureContext\AuthContext
+  extensions:
+    Behat\Symfony2Extension:
+      kernel:
+        class: TestApp\Kernel
