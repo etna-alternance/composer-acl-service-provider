@@ -58,10 +58,7 @@
         </exec>
     </target>
     <target name="doc" description="Generate documentation">
-        <exec executable="phpdoc" passthru="true" checkreturn="true">
-            <arg value="--force" />
-            <arg value="--no-interaction" />
-        </exec>
+        <exec command="phpdoc --force --no-interaction" passthru="true"/>
     </target>
     <target name="ocular">
         <exec command="ocular code-coverage:upload --format=php-clover tmp/behat/coverage.clover.xml" passthru="true"/>
