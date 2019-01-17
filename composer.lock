@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "etna/auth-service-provider",
-            "version": "v3.0.0-alpha.2",
+            "version": "v3.0.0-alpha.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/etna-alternance/composer-auth-service-provider.git",
-                "reference": "cd1c025efbcfb729252d77685fdc67c4442974e1"
+                "reference": "87260d79f1eb4a3ae114ce131b107cf782beba5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/etna-alternance/composer-auth-service-provider/zipball/cd1c025efbcfb729252d77685fdc67c4442974e1",
-                "reference": "cd1c025efbcfb729252d77685fdc67c4442974e1",
+                "url": "https://api.github.com/repos/etna-alternance/composer-auth-service-provider/zipball/87260d79f1eb4a3ae114ce131b107cf782beba5e",
+                "reference": "87260d79f1eb4a3ae114ce131b107cf782beba5e",
                 "shasum": ""
             },
             "require": {
@@ -35,8 +35,11 @@
                 "php-coveralls/php-coveralls": "^2.1",
                 "phploc/phploc": "^4.0",
                 "phpmd/phpmd": "^2.6",
+                "phpmetrics/phpmetrics": "^2.4",
+                "phpstan/phpstan": "^0.10.8",
                 "phpunit/php-code-coverage": "^6.0",
                 "phpunit/phpcov": "^5.0",
+                "povils/phpmnd": "^2.0",
                 "scrutinizer/ocular": "^1.5",
                 "sebastian/phpcpd": "^4.0",
                 "sensio/framework-extra-bundle": "^5.1",
@@ -65,7 +68,11 @@
                 ],
                 "coveralls": [
                     "php-coveralls"
-                ]
+                ],
+                "auto-scripts": {
+                    "cache:clear": "symfony-cmd",
+                    "assets:install %PUBLIC_DIR%": "symfony-cmd"
+                }
             },
             "license": [
                 "MIT"
@@ -78,9 +85,9 @@
             ],
             "description": "Symfony 4 bundle to handle ETNA cookie based authentication",
             "support": {
-                "source": "https://github.com/etna-alternance/composer-auth-service-provider/tree/v3.0.0-alpha.2"
+                "source": "https://github.com/etna-alternance/composer-auth-service-provider/tree/v3.0.0-alpha.3"
             },
-            "time": "2019-01-14T17:41:26+00:00"
+            "time": "2019-01-16T14:06:33+00:00"
         },
         {
             "name": "etna/php-rsa",
