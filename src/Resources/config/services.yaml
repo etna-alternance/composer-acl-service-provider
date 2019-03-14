@@ -1,0 +1,7 @@
+services:
+    acl.access_service:
+        autoconfigure: true
+        autowire: true
+        class: 'ETNA\Acl\Services\AclAccessService'
+
+    ETNA\Acl\Services\AclAccessService: '@acl.access_service'

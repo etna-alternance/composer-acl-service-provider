@@ -2,7 +2,11 @@ tools:
     php_sim: true
     php_pdepend: true
     php_analyzer: true
-
+filter:
+    paths:
+        - src/
+    dependency_paths:
+        - vendor/
 checks:
     php:
         code_rating: true
